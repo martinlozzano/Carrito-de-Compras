@@ -1,11 +1,101 @@
 let total = 0;
+let cantidad = 1
 
-function calcularTotal(precio){
-    return total += precio
+let carrito = [];
+
+let pantalones = [
+    { nombre: "Jean Gris c/ rotura", precio: 13000, cantidad: 0 },
+    { nombre: "Jogger Bali", precio: 17950, cantidad: 0 },
+    { nombre: "Cargo Rainbow", precio: 19800, cantidad: 0 },
+    { nombre: "Babucha Rústica", precio: 6500, cantidad: 0 },
+];
+
+let bermudas = [
+    { nombre: "Bermuda China", precio: 8500, cantidad: 0 },
+    { nombre: "Short Rústico Liso", precio: 3500, cantidad: 0 },
+    { nombre: "Bermuda Doja Cargo", precio: 17900, cantidad: 0 },
+    { nombre: "Short Bitter", precio: 11700, cantidad: 0 },
+];
+
+let remeras = [
+    { nombre: "Top Joplin", precio: 8650, cantidad: 0 },
+    { nombre: "Remera Peeping", precio: 7900, cantidad: 0 },
+    { nombre: "Remera Básica", precio: 3500, cantidad: 0 },
+    { nombre: "Remera Cambria", precio: 8650, cantidad: 0 },
+];
+
+let camisas = [
+    { nombre: "Camisa Ollie", precio: 27350, cantidad: 0 },
+    { nombre: "Camisa Elastizada Lisa", precio: 9500, cantidad: 0 },
+    { nombre: "Camisa Entallada", precio: 7500, cantidad: 0 },
+    { nombre: "Camisa Gore", precio: 19100, cantidad: 0 },
+];
+
+let camperas = [
+    { nombre: "Campera Crop Fossilize", precio: 21850, cantidad: 0 },
+    { nombre: "Campera Deportiva 1/2 Estacion", precio: 7500, cantidad: 0 },
+    { nombre: "Campera Rústica", precio: 7500, cantidad: 0 },
+    { nombre: "Campera Over Rosemary", precio: 17050, cantidad: 0 },
+];
+
+function calcularTotal(precio, cantidad){
+    return total += (precio * cantidad)
 }
+
+function agregarCarrito(prenda, posicion){
+    let agregarCantidad = parseInt(prompt("Cantidad a agregar:"))
+
+    if (!carrito.includes(prenda[posicion])){
+        carrito.push(prenda[posicion])
+    }
+    
+    prenda[posicion].cantidad += agregarCantidad
+
+    calcularTotal(prenda[posicion].precio, agregarCantidad)
+    alert("Se agregó '"+prenda[posicion].nombre+"' a su carrito de compras.");
+}
+
+function mostrarCarrito(){
+    let cadena = "SUBTOTAL: $" + total + "\n\n";
+    for (const producto of carrito){
+        cadena += producto.nombre + " (x" + producto.cantidad + ")        " + producto.precio + "\n" + "_".repeat(60) + "\n";
+    }
+
+    return cadena
+}
+
+function cadenaEliminar(){
+    cadena = "¿Que producto desea eliminar? \n\n";
+    let i = 1
+    for (const producto of carrito) {
+        cadena += i + "- " + producto.nombre + " (x" + producto.cantidad + ")\n";
+        i++;
+    }
+    return cadena
+}
+
+function eliminarDeCarrito(indice){
+    let cantidadEliminar = parseInt(prompt("¿Cuántos desea eliminar?"))
+
+    if(cantidadEliminar > carrito[indice-1].cantidad){
+        alert("No puede eliminar más de la cantidad total del producto en el carrito.")
+    } else if (cantidadEliminar <= 0){
+        alert("No puede eliminar 0 o menos productos del carrito.")
+    } else if(cantidadEliminar < carrito[indice-1].cantidad){
+        carrito[indice-1].cantidad -= cantidadEliminar
+        total -= (carrito[indice-1].precio * cantidadEliminar)
+    } else if (cantidadEliminar == carrito[indice-1].cantidad){
+        carrito[indice-1].cantidad = 0
+        total -= (carrito[indice-1].precio * cantidadEliminar)
+        carrito.splice(indice-1, 1)
+    }
+
+    return carrito
+}
+
 do {
     
-    opcionTipo = parseInt(prompt("Seleccione que tipo de prenda desea comprar (ingrese número): \n1- Pantalón. \n2- Bermuda. \n3- Remera. \n4- Camisa. \n5- Campera. \n\n8- Pagar. \n9- Resetear carrito de compras. \n0- Salir. \n\nSUBTOTAL: $" + total));
+    opcionTipo = parseInt(prompt("Seleccione que tipo de prenda desea comprar (ingrese número): \n1- Pantalón. \n2- Bermuda. \n3- Remera. \n4- Camisa. \n5- Campera. \n\n8- Ingresar al Carrito \n0- Salir. \n\nSUBTOTAL: $" + total));
 
     switch(opcionTipo){
         case 1:
@@ -13,20 +103,16 @@ do {
             
             switch(opcionPantalon){
                 case "1":
-                    calcularTotal(13000)
-                    alert("Se agregó 'Jean Gris c/ rotura' a su carrito de compras.");
+                    agregarCarrito(pantalones, opcionPantalon - 1);
                     break;
                 case "2":
-                    calcularTotal(17950);
-                    alert("Se agregó 'Jogger Bali' a su carrito de compras.");
+                    agregarCarrito(pantalones, opcionPantalon - 1);
                     break;
                 case "3":
-                    calcularTotal(19800);
-                    alert("Se agregó 'Cargo Rainbow' a su carrito de compras.");
+                    agregarCarrito(pantalones, opcionPantalon - 1);
                     break;
                 case "4":
-                    calcularTotal(6500);
-                    alert("Se agregó 'Babucha Rústica' a su carrito de compras.");
+                    agregarCarrito(pantalones, opcionPantalon - 1);
                     break;
                 default:
                     alert("Opción inválida.");
@@ -40,20 +126,16 @@ do {
 
             switch(opcionBermuda){
                 case "1":
-                    calcularTotal(8500);
-                    alert("Se agregó 'Bermuda China' a su carrito de compras.");
+                    agregarCarrito(bermudas, opcionBermuda - 1);
                     break;
                 case "2":
-                    calcularTotal(3500);
-                    alert("Se agregó 'Short Rústico Liso' a su carrito de compras.");
+                    agregarCarrito(bermudas, opcionBermuda - 1);
                     break;
                 case "3":
-                    calcularTotal(17900);
-                    alert("Se agregó 'Bermuda Doja Cargo' a su carrito de compras.");
+                    agregarCarrito(bermudas, opcionBermuda - 1);
                     break;
                 case "4":
-                    calcularTotal(11700);
-                    alert("Se agregó 'Short Bitter' a su carrito de compras.");
+                    agregarCarrito(bermudas, opcionBermuda - 1);
                     break;
                 default:
                     alert("Opción inválida.");
@@ -67,20 +149,16 @@ do {
             
             switch(opcionRemera){
                 case "1":
-                    calcularTotal(8650);
-                    alert("Se agregó 'Top Joplin' a su carrito de compras.");
+                    agregarCarrito(remeras, opcionRemera - 1);
                     break;
                 case "2":
-                    calcularTotal(7900);
-                    alert("Se agregó 'Remera Peeping' a su carrito de compras.");
+                    agregarCarrito(remeras, opcionRemera - 1);
                     break;
                 case "3":
-                    calcularTotal(3500);
-                    alert("Se agregó 'Remera Básica' a su carrito de compras.");
+                    agregarCarrito(remeras, opcionRemera - 1);
                     break;
                 case "4":
-                    calcularTotal(8650);
-                    alert("Se agregó 'Remera Cambria' a su carrito de compras.");
+                    agregarCarrito(remeras, opcionRemera - 1);
                     break;
                 default:
                     alert("Opción inválida.");
@@ -94,20 +172,16 @@ do {
             
             switch(opcionCamisa){
                 case "1":
-                    calcularTotal(27350);
-                    alert("Se agregó 'Camisa Ollie' a su carrito de compras.");
+                    agregarCarrito(camisas, opcionCamisa - 1);
                     break;
                 case "2":
-                    calcularTotal(9500);
-                    alert("Se agregó 'Camisa Elastizada Lisa' a su carrito de compras.");
+                    agregarCarrito(camisas, opcionCamisa - 1);
                     break;
                 case "3":
-                    calcularTotal(7500);
-                    alert("Se agregó 'Camisa Entallada' a su carrito de compras.");
+                    agregarCarrito(camisas, opcionCamisa - 1);
                     break;
                 case "4":
-                    calcularTotal(19100);
-                    alert("Se agregó 'Camisa Gore' a su carrito de compras.");
+                    agregarCarrito(camisas, opcionCamisa - 1);
                     break;
                 default:
                     alert("Opción inválida.");
@@ -121,20 +195,16 @@ do {
             
             switch(opcionCampera){
                 case "1":
-                    calcularTotal(21850);
-                    alert("Se agregó 'Campera Crop Fossilize' a su carrito de compras.");
+                    agregarCarrito(camperas, opcionCampera - 1);
                     break;
                 case "2":
-                    calcularTotal(7500);
-                    alert("Se agregó 'Campera Deportiva 1/2 Estacion' a su carrito de compras.");
+                    agregarCarrito(camperas, opcionCampera - 1);
                     break;
                 case "3":
-                    calcularTotal(7500);
-                    alert("Se agregó 'Campera Rústica' a su carrito de compras.");
+                    agregarCarrito(camperas, opcionCampera - 1);
                     break;
                 case "4":
-                    calcularTotal(17050);
-                    alert("Se agregó 'Campera Over Rosemary' a su carrito de compras.");
+                    agregarCarrito(camperas, opcionCampera - 1);
                     break;
                 default:
                     alert("Opción inválida.");
@@ -144,67 +214,81 @@ do {
             break;
         
         case 8:
-            let opcionEntrega = prompt("Elija la forma de entrega \n1- Retiro en el local. \n2- Envío a domicilio ($2000).");
+            alert(mostrarCarrito())
+
+            if (carrito.length > 0){
+                let opcionCarrito = prompt("SUBTOTAL: $"+ total + "\n\n¿Cómo desea continuar? \n1- Eliminar producto. \n2- Pagar. \n3- Volver.")
+                switch(opcionCarrito){
+                    case "1":
+                        let productoEliminar = prompt(cadenaEliminar())
+                        eliminarDeCarrito(productoEliminar)
+                        break;
+                    case "2":
+                        let opcionEntrega = prompt("Elija la forma de entrega \n1- Retiro en el local. \n2- Envío a domicilio ($2000).");
+                
+                        switch (opcionEntrega){
+                            case "1":
+                                break;
+                            case "2":
+                                calcularTotal(2000);
+                                break;
+                        }
+                    
+                        let opcionPago = prompt("Elija un método de pago \n1- Crédito. \n2- Débito/Transferencia bancaria. \n3- Efectivo en el local (15% de descuento). \n\n0- Salir.");
             
-            switch (opcionEntrega){
-                case "1":
-                    break;
-                case "2":
-                    calcularTotal(2000);
-                    break;
+                        switch (opcionPago) {
+                            case "1":             
+                                let opcionCuotas = prompt("¿En cuantas cuotas desea abonar? \n1. 3(tres) cuotas - ( 17% interés). \n2. 6(seis) cuotas - ( 24% interés). \n3. 12(doce) cuotas - ( 46% interés).");
+            
+                                switch (opcionCuotas) {
+                                    case "1":
+                                        total *= 1.17;
+                                            alert("Total a pagar en 3 cuotas: $" + total)
+                                        break;
+                                    case "2":
+                                        total *= 1.24;
+                                            alert("Total a pagar en 6 cuotas: $" + total)
+                                        break;
+                                    case "3":
+                                        total *= 1.46;
+                                            alert("Total a pagar en 12 cuotas: $" + total)
+                                        break;
+                                    default:
+                                        alert("Opción inválida.")
+                                        break;
+                                }
+                            case "2":
+                                alert("Total a pagar con tarjeta de debito o transferencia bancaria: $" + total)
+                                break;
+                            case "3":
+                                total *= 0.85;
+                                alert("Total a pagar en efectivo: $" + total);
+                                break;
+                            case "0":
+                                break;
+                        }
+            
+                        let opcionContinuar = prompt("¿Desea continuar? \n1- Si. \n2- No.")
+            
+                        switch (opcionContinuar){
+                            case "1":
+                                alert("¡Compra exitosa! Gracias por comprar.");
+                                total = 0;
+                                carrito = [];
+                                break;
+                            case "2":
+                                break;
+                        }
+                        break;      
+                    
+                    case "3":
+                        break;
+
+                    default:
+                        alert("Opción inválida.");
+                        break;
+                }
             }
-        
-            let opcionPago = prompt("Elija un método de pago \n1- Crédito. \n2- Débito/Transferencia bancaria. \n3- Efectivo en el local (15% de descuento). \n\n0- Salir.");
-
-            switch (opcionPago) {
-                case "1":             
-                    let opcionCuotas = prompt("¿En cuantas cuotas desea abonar? \n1. 3(tres) cuotas - ( 17% interés). \n2. 6(seis) cuotas - ( 24% interés). \n3. 12(doce) cuotas - ( 46% interés).");
-
-                    switch (opcionCuotas) {
-                        case "1":
-                            total *= 1.17;
-                                alert("Total a pagar en 3 cuotas: $" + total)
-                            break;
-                        case "2":
-                            total *= 1.24;
-                                alert("Total a pagar en 6 cuotas: $" + total)
-                            break;
-                        case "3":
-                            total *= 1.46;
-                                alert("Total a pagar en 12 cuotas: $" + total)
-                            break;
-                        default:
-                            alert("Opción inválida.")
-                            break;
-                    }
-                case "2":
-                    alert("Total a pagar con tarjeta de debito o transferencia bancaria: $" + total)
-                    break;
-                case "3":
-                    total *= 0.85;
-                    alert("Total a pagar en efectivo: $" + total);
-                    break;
-                case "0":
-                    break;
-            }
-
-            let opcionContinuar = prompt("¿Desea continuar? \n1- Si. \n2- No.")
-
-            switch (opcionContinuar){
-                case "1":
-                    alert("¡Compra exitosa! Gracias por comprar.");
-                    total = 0;
-                    break;
-                case "2":
-                    total = 0;
-                    break;
-            }
-            break;
-        
-        case 9:
-            total = 0;
-            break;
-
         case 0:
             break;
         
