@@ -1,5 +1,5 @@
 let total = 0;
-let cantidad = 1
+let cantidad = 1;
 
 let carrito = [];
 
@@ -45,20 +45,26 @@ function calcularTotal(precio, cantidad){
 function agregarCarrito(prenda, posicion){
     let agregarCantidad = parseInt(prompt("Cantidad a agregar:"))
 
-    if (!carrito.includes(prenda[posicion])){
-        carrito.push(prenda[posicion])
-    }
+    if (agregarCantidad > 0){
+        if (!carrito.includes(prenda[posicion])){
+            carrito.push(prenda[posicion])
+        }
+        
+        prenda[posicion].cantidad += agregarCantidad
     
-    prenda[posicion].cantidad += agregarCantidad
-
-    calcularTotal(prenda[posicion].precio, agregarCantidad)
-    alert("Se agregó '"+prenda[posicion].nombre+"' a su carrito de compras.");
+        calcularTotal(prenda[posicion].precio, agregarCantidad)
+        alert("Se agregó '" + prenda[posicion].nombre + "' (x" + agregarCantidad + ") a su carrito de compras.");
+    }else if(agregarCantidad === 0){
+        alert("No se agregó ningún elemento al carrito.")
+    }else{
+        alert("Opción inválida.");
+    }    
 }
 
 function mostrarCarrito(){
     let cadena = "SUBTOTAL: $" + total + "\n\n";
     for (const producto of carrito){
-        cadena += producto.nombre + " (x" + producto.cantidad + ")        " + producto.precio + "\n" + "_".repeat(60) + "\n";
+        cadena += producto.nombre + "     (x" + producto.cantidad + ")        " + producto.precio + "\n" + "_".repeat(60) + "\n";
     }
 
     return cadena
@@ -84,9 +90,14 @@ function eliminarDeCarrito(indice){
     } else if(cantidadEliminar < carrito[indice-1].cantidad){
         carrito[indice-1].cantidad -= cantidadEliminar
         total -= (carrito[indice-1].precio * cantidadEliminar)
+
+        alert("Se han eliminado " + cantidadEliminar + " " + carrito[indice-1].nombre + "' del carrito.")
     } else if (cantidadEliminar == carrito[indice-1].cantidad){
         carrito[indice-1].cantidad = 0
         total -= (carrito[indice-1].precio * cantidadEliminar)
+
+        alert("El producto '" + carrito[indice-1].nombre + "' se ha eliminado del carrito")
+
         carrito.splice(indice-1, 1)
     }
 
@@ -94,12 +105,15 @@ function eliminarDeCarrito(indice){
 }
 
 do {
-    
-    opcionTipo = parseInt(prompt("Seleccione que tipo de prenda desea comprar (ingrese número): \n1- Pantalón. \n2- Bermuda. \n3- Remera. \n4- Camisa. \n5- Campera. \n\n8- Ingresar al Carrito \n0- Salir. \n\nSUBTOTAL: $" + total));
+    let hayCuotas = false
+    let esEfectivo = false
+    let cantidadCuotas = 0
+
+    opcionTipo = parseInt(prompt("Seleccione que tipo de prenda desea comprar (ingrese número): \n1- Pantalón. \n2- Bermuda. \n3- Remera. \n4- Camisa. \n5- Campera. \n\n8- Ingresar al Carrito \n0- Salir. \n\nSUBTOTAL: $" + Math.round(total)));
 
     switch(opcionTipo){
         case 1:
-            let opcionPantalon = prompt("Seleccione que pantalón desea comprar (ingrese número):   \n1. Jean Gris c/ rotura - ($13.000). \n2. Jogger Bali - ($17.950). \n3.  Cargo Rainbow - ($19.800). \n4. Babucha Rústica - ($6.500).")
+            let opcionPantalon = prompt("Seleccione que pantalón desea comprar (ingrese número):   \n1. Jean Gris c/ rotura - ($13.000). \n2. Jogger Bali - ($17.950). \n3. Cargo Rainbow - ($19.800). \n4. Babucha Rústica - ($6.500).")
             
             switch(opcionPantalon){
                 case "1":
@@ -217,7 +231,7 @@ do {
             alert(mostrarCarrito())
 
             if (carrito.length > 0){
-                let opcionCarrito = prompt("SUBTOTAL: $"+ total + "\n\n¿Cómo desea continuar? \n1- Eliminar producto. \n2- Pagar. \n3- Volver.")
+                let opcionCarrito = prompt("SUBTOTAL: $"+ Math.round(total) + "\n\n¿Cómo desea continuar? \n1- Eliminar producto. \n2- Pagar. \n3- Volver.")
                 switch(opcionCarrito){
                     case "1":
                         let productoEliminar = prompt(cadenaEliminar())
@@ -230,57 +244,108 @@ do {
                             case "1":
                                 break;
                             case "2":
-                                calcularTotal(2000);
+                                total += 2000;
+                                break;
+                            default:
+                                alert("Opción inválida.");
                                 break;
                         }
                     
-                        let opcionPago = prompt("Elija un método de pago \n1- Crédito. \n2- Débito/Transferencia bancaria. \n3- Efectivo en el local (15% de descuento). \n\n0- Salir.");
+                        if ((opcionEntrega == "1") || (opcionEntrega == "2")){
+                            let opcionPago = prompt("Elija un método de pago \n1- Crédito. \n2- Débito/Transferencia bancaria. \n3- Efectivo en el local (15% de descuento). \n\n0- Volver.");
             
-                        switch (opcionPago) {
-                            case "1":             
-                                let opcionCuotas = prompt("¿En cuantas cuotas desea abonar? \n1. 3(tres) cuotas - ( 17% interés). \n2. 6(seis) cuotas - ( 24% interés). \n3. 12(doce) cuotas - ( 46% interés).");
-            
-                                switch (opcionCuotas) {
+                            switch (opcionPago) {
+                                case "1":             
+                                    let opcionCuotas = prompt("¿En cuantas cuotas desea abonar? \n1. 3(tres) cuotas - ( 17% interés). \n2. 6(seis) cuotas - ( 24% interés). \n3. 12(doce) cuotas - ( 46% interés). \n\n0. Volver.");
+
+                                    cantidadCuotas = opcionCuotas
+                                    
+                                    switch (opcionCuotas) {
+                                        case "1":
+                                            total *= 1.17;
+                                                alert("Total a pagar en 3 cuotas: $" + Math.round(total))
+                                                hayCuotas = true
+                                            break;
+                                        case "2":
+                                            total *= 1.24;
+                                                alert("Total a pagar en 6 cuotas: $" + Math.round(total))
+                                                hayCuotas = true
+                                            break;
+                                        case "3":
+                                            total *= 1.46;
+                                                alert("Total a pagar en 12 cuotas: $" + Math.round(total))
+                                                hayCuotas = true
+                                            break;
+                                        case "0":
+                                            break;
+                                        default:
+                                            alert("Opción inválida.");
+                                            break;
+                                    }
+                                    break;
+
+                                case "2":
+                                    alert("Total a pagar con tarjeta de debito o transferencia bancaria: $" + Math.round(total));
+                                    break;
+
+                                case "3":
+                                    total *= 0.85;
+                                    esEfectivo = true
+                                    alert("Total a pagar en efectivo: $" + Math.round(total));
+                                    break;
+
+                                case "0":
+                                    if (opcionEntrega == "2"){
+                                        total -= 2000;
+                                    }
+                                    break;
+                                    
+                                default:
+                                    alert("Opción inválida.");
+                                    break;
+                            }
+
+                            if ((opcionPago < 4) && (opcionPago > 0)){
+                                let opcionContinuar = prompt("¿Desea continuar? \n1- Si. \n2- No.")
+                
+                                switch (opcionContinuar){
                                     case "1":
-                                        total *= 1.17;
-                                            alert("Total a pagar en 3 cuotas: $" + total)
+                                        alert("¡Compra exitosa! Gracias por comprar.");
+                                        total = 0;
+                                        carrito = [];
                                         break;
+
                                     case "2":
-                                        total *= 1.24;
-                                            alert("Total a pagar en 6 cuotas: $" + total)
+                                        if (hayCuotas){
+                                            switch (cantidadCuotas) {
+                                                case "1":
+                                                    total /= 1.17;
+                                                    break;
+                                                case "2":
+                                                    total /= 1.24;
+                                                    break;
+                                                case "3":
+                                                    total /= 1.46;
+                                                    break;
+                                            }
+                                        }
+                                        if (esEfectivo){
+                                            total /= 0.85
+                                        }
+
+                                        if (opcionEntrega == "2"){
+                                            total -= 2000;
+                                        }
                                         break;
-                                    case "3":
-                                        total *= 1.46;
-                                            alert("Total a pagar en 12 cuotas: $" + total)
-                                        break;
+
                                     default:
-                                        alert("Opción inválida.")
+                                        alert("Opción inválida.");
                                         break;
-                                }
-                            case "2":
-                                alert("Total a pagar con tarjeta de debito o transferencia bancaria: $" + total)
-                                break;
-                            case "3":
-                                total *= 0.85;
-                                alert("Total a pagar en efectivo: $" + total);
-                                break;
-                            case "0":
-                                break;
-                        }
-            
-                        let opcionContinuar = prompt("¿Desea continuar? \n1- Si. \n2- No.")
-            
-                        switch (opcionContinuar){
-                            case "1":
-                                alert("¡Compra exitosa! Gracias por comprar.");
-                                total = 0;
-                                carrito = [];
-                                break;
-                            case "2":
-                                break;
+                                }  
+                            }
                         }
                         break;      
-                    
+
                     case "3":
                         break;
 
